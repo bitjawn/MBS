@@ -1,0 +1,91 @@
+#!/bin/bash
+
+clearVars() {
+ unset USER HOST SHARE MNTP
+}
+
+gracefulExit() {
+ clearVars
+ exit 0
+}
+
+usage() {
+ green "Usage: " `cyan "mountshare <HostNameOrIP> <ShareName> <UserName> [MountPoint]"`
+ exit 0
+}
+
+missing() {
+ red "Error: " `white "Missing one or more arguments"`
+ usage
+}
+
+argument() {
+ red "Error: " `white "Invalid argument list"`
+ usage
+}
+
+trap "gracefulExit" INT TERM PWR QUIT KILL STOP
+
+if [[ $# -gt 4 ]];
+then
+    argument
+elif [[ $# -lt 3 ]];
+then
+    missing
+fi
+
+case $# in
+ 3)
+   if [[ $1 != $str ]] && [[ $2 != $str ]] && [[ $3 != $str ]];
+   then
+       HOST=${1}
+       SHARE=${2}
+       USER=${3}
+       if [[ ! -d /mnt/mount1 ]];
+       then
+           sudo mkdir /mnt/mount1
+       fi
+       sudo /bin/mount -t cifs //$HOST/$SHARE /mnt/mount1 -o user=$USER
+       if [[ $? -gt 0 ]];
+       then
+           red "Error: " `white "Unknown error occurred"`
+           usage
+       else
+           gracefulExit
+       fi
+   else
+       missing
+   fi
+   ;;
+
+  4)
+    if [[ $1 != $str ]] && [[ $2 != $str ]] && [[ $3 != $str ]] && [[ $4 != $str ]];
+    then
+        if [[ -d $4 ]];
+        then
+            HOST=${1}
+            SHARE=${2}
+            USER=${3}
+            MNTP=${4}
+            sudo /bin/mount -t cifs //$HOST/$SHARE $MNTP -o user=$USER
+            if [[ $? -gt 0 ]];
+            then
+                red "Error: " `white "An unknown error occurred"`
+                usage
+            else
+                gracefulExit
+            fi
+        else
+            red "Error: " `white "The mount point ${4} does not exist"`
+            usage
+        fi
+     else
+         missing
+     fi
+     ;;
+
+  *)
+    argument
+  ;;
+esac  
+

@@ -1,0 +1,74 @@
+#!/bin/bash
+
+clearVars() {
+ unset SRC DESTDIR STAMP DESTEND
+}
+
+gracefulExit() {
+ clearVars
+ exit 0
+}
+
+usage() {
+ clearVars
+ green "Usage: " `cyan "copy <SourceFileOrDirectory> <DestinationPath>"`
+ green "Note: " `cyan "The 'Destination Path' must end with just the name of the directory - with or without the trailing forward slash"`
+ exit 0
+}
+
+missing() {
+ red "Error: " `white "Missing one or more arguments"`
+ usage
+}
+
+copy() {
+ if [[ -f ${SRC} ]];
+ then
+     cp "$SRC" "${DESTDIR}/${DESTEND}"
+     if [[ $? -gt 0 ]];
+     then
+         red "Error: " `white "${SRC} was not copied"`
+         usage
+     else
+         gracefulExit
+     fi
+ elif [[ -d ${SRC} ]];
+ then
+     cp -rP "${SRC}" "${DESTDIR}/${DESTEND}"
+     if [[ $? -gt 0 ]];
+     then
+         red "Error: " `white "${SRC} was not copied"`
+         usage
+     else
+         gracefulExit
+     fi
+ fi
+}
+
+trap "gracefulExit" INT TERM QUIT PWR STOP KILL
+
+if [[ $# -gt 2 ]];
+then
+    red "Error: " `white "Invalid argument list"`
+    usage
+elif [[ $# -lt 2 ]];
+then
+    missing
+else
+    if [[ ! -d "${2}" ]];
+    then
+        red "Error: " `white "Invalid directory name"`
+        exit 0
+    elif [[ ! -e "${1}" ]];
+    then
+        red "Error: " `white "${1} must exist as a file or a directory"`
+        exit 0
+    elif [[ ${1} =~ (/)?([a-z0-9]+(\.[a-z]{3})?)$ ]];
+    then
+        DESTEND=${BASH_REMATCH[2]}
+        SRC=${1}
+        DESTDIR=${2}
+        copy
+    fi
+fi
+

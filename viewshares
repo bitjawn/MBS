@@ -1,0 +1,92 @@
+#!/bin/bash
+
+clear_vars() {
+ unset HOST USER
+}
+
+graceful_exit() {
+ clear_vars
+ exit 0
+}
+
+error_exit() {
+ clear
+ clear_vars
+ red "Error: " `white "Confirm Credentials For User Access To Host\n"`
+ exit 120
+}
+
+missing_parameter_exit() {
+ clear
+ clear_vars
+ red "Error: " `white "Missing Parameter(s)"`
+ usage
+ exit 119
+}
+
+too_many_parameters_exit() {
+ clear
+ clear_vars
+ red "Error: " `white "Too Many Parameters\n"`
+ usage
+ exit 118
+}
+
+unknown_exit() {
+ clear
+ clear_vars
+ red "Error: " `white "An Unknown Error Occurred"`
+ usage
+ exit 117
+}
+
+input_error_exit() {
+ clear
+ clear_vars
+ red "Error: " `white "Input Missing or Null\n"`
+ usage
+ exit 116
+}
+
+usage() {
+ green "Usage: " `cyan "viewshares <HostName_or_IPAddress> <UserName>"`
+}
+
+connect() {
+ smbclient -L $HOST -U $USER
+ if [[ $? != 0 ]];
+ then
+    unknown_exit
+ else
+    graceful_exit
+ fi
+}
+
+trap "graceful_exit" INT TERM QUIT PWR
+clear
+
+if [[ $# -gt 2 ]];
+then
+    too_many_parameters_exit
+else
+    case $# in
+     0)
+      missing_parameter_exit
+      ;;
+
+      1)
+      missing_parameter_exit
+      ;;
+
+     2)
+      if [[ $1 == $str ]] || [[ $2 == $str ]];
+      then
+         input_error_exit
+      else
+         HOST=$1
+         USER=$2
+         connect
+      fi
+      ;;
+    esac
+fi

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [[ ${1} =~ (/)?([a-z0-9]+(\.[a-z]{3})?)$ ]];
+then
+    xcolor "1. ${BASH_REMATCH[0]}" 1 92
+    xcolor "2. ${BASH_REMATCH[1]}" 1 92
+    xcolor "3. ${BASH_REMATCH[2]}" 1 92
+    xcolor "4. ${BASH_REMATCH[3]}" 1 92
+    xcolor "5. ${BASH_REMATCH[4]}" 1 92
+    xcolor "Match" 1 93
+else
+    xcolor "No Match" 1 91
+fi

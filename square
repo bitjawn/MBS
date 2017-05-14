@@ -1,0 +1,17 @@
+#!/bin/bash
+clear_vars() {
+ unset NUM
+}
+
+gracefulExit() {
+ clear_vars
+ exit 0
+}
+
+trap 'gracefulExit' INT TERM PWR QUIT STOP
+
+for NUM in $@
+do
+     magenta `sq $NUM`
+done
+

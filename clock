@@ -1,0 +1,4 @@
+#!/bin/bash
+
+green "\n\n\t\t\t$(date +'%X')\n\n\n"
+exit 0

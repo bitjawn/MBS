@@ -1,0 +1,6 @@
+#!/bin/bash
+c
+ls -Rlapgoh bin | nl
+exit 0
+
+

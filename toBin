@@ -1,0 +1,40 @@
+#!/bin/bash
+
+clear_vars() {
+ unset NUM
+}
+
+greaceful_exit() {
+ clear_vars
+ exit 0;
+}
+
+error_exit() {
+ red "\n\tError: " `white "Missing Parameter"`
+ usage
+ exit 121
+}
+
+usage() {
+ green "\tUsage: " `cyan "toBin <integer>"`
+}
+
+trap "graceful_exit" INT TERM QUIT PWR
+
+if [[ $# -gt 1 ]];
+then
+   for NUM in $@
+   do
+     magenta $(echo "obase=2; $NUM" | bc)"\n"
+   done
+else
+   case $# in
+    0)
+     error_exit
+     ;;
+
+   1)
+    magenta $(echo "obase=2; $1" | bc)"\n"
+    ;;
+   esac
+fi

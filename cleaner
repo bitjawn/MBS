@@ -1,0 +1,45 @@
+#!/bin/bash
+# Cleans the log files
+
+# cleaner, version 1.0
+
+LOG_DIR=/var/log
+ROOT_UID=0
+LINES=50
+E_XCD=86
+E_NOTROOT=87
+
+# Run as root
+if [ "$UID" -ne "$ROOT_UID" ]
+then
+    echo -e "\033[1;91mMust be root to run this script.\033[0m"
+    exit $E_NOTROOT
+fi
+
+if [ -n "$1" ]
+then
+    lines=$1
+else
+    lines=$LINES
+fi
+
+cd $LOG_DIR
+
+if [ `pwd` != "$LOG_DIR" ] # or if [ "$PWD" != "$LOG_DIR" ]
+then
+    echo -e "\033[1;91mCan't change to $LOG_DIR.\033[0m"
+    exit $E_XCD
+fi
+
+cd /var/log || {
+    echo -e "\033[1;91mCannot change to necessary directory.\033[0m" >&2
+    exit $E_XCD;
+}
+
+tail -n $lines message > mesg.temp
+mv mesg.temp messages
+
+cat /dev/null > wtmp
+echo -e "\033[1;92mLogs cleaned up\033[0m"
+
+exit 0

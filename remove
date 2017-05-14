@@ -1,0 +1,44 @@
+#!/bin/bash
+
+graceful_exit() {
+ exit 0
+}
+
+remove_error() {
+ printf "\n\t\tError: File Could Not Be Deleted\n"
+ printf "\t\tCheck Path Syntax\n"
+ exit 121
+}
+
+error_exit() {
+ printf "\n\t\tError: Missing Parameter "
+ printf "Or File Does Not Exist\n"
+ exit 120
+}
+
+trap "graceful_exit" INT TERM QUIT PWR
+
+if [[ -e $1 ]] && [[ $1 != $str ]];
+then
+   if [[ -f $1 ]];
+   then
+      rm -f $1
+      if [[ $? == 0 ]];
+      then
+         graceful_exit
+      else
+         remove_error
+      fi
+   elif [[ -d $1 ]];
+   then
+      rm -r $1
+      if [[ $? == 0 ]];
+      then
+         graceful_exit
+      else
+         remove_error
+      fi
+   fi 
+else
+   error_exit
+fi

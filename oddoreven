@@ -1,0 +1,83 @@
+#!/bin/bash
+clear_vars() {
+ unset ARG HALF RMND OHALF
+}
+
+graceful_exit() {
+ clear_vars
+ exit 0
+}
+
+odd() {
+ printf "\n\tOdd Number\n"
+ HALF=$(($ARG/2))
+ RMND=$(($ARG%2))
+ OHALF=$(($(($ARG-$HALF))-$RMND))
+ printf "\tFirst Half: "$HALF"\n"
+ printf "\tOther Half: "$OHALF"\n"
+ printf "\tRemainder: "$RMND"\n"
+ 
+ graceful_exit
+}
+
+even() {
+ printf "\n\tEven Number\n"
+ HALF=$(($ARG/2))
+ OHALF=$(($ARG-$HALF))
+ printf "\tFirst Half: "$HALF"\n"
+ printf "\tOther Half: "$OHALF"\n"
+ 
+ graceful_exit
+}
+
+arg() {
+ regexp="[0-9]+"
+ if [[ $ARG =~ $regexp ]];
+ then
+#     printf "\n\tIt's A Number\n\n"
+     if [[ $(($ARG%2)) -eq 0 ]];
+     then
+         even
+     else
+         odd
+     fi	
+ else
+     arg_error
+ fi
+}
+
+max_arg() {
+ clear_vars
+ printf "\n\tError: Too Many Arguments\n"
+ usage
+ exit 121
+}
+
+min_arg() {
+ clear_vars
+ printf "\n\tError: Missing Argument\n"
+ usage
+ exit 120
+}
+
+arg_error() {
+ clear_vars
+ printf "\n\tUnknown Error Occured With The Argument\n"
+ usage
+ exit 119
+}
+
+usage() {
+ printf "\n\tYou're Using It Wrong!!\n"
+}
+
+if [[ $# -gt 1 ]];
+then
+    max_arg
+elif [[ $# -le 0 ]];
+then
+    min_arg
+else
+    ARG=$1
+    arg
+fi

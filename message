@@ -1,0 +1,35 @@
+#!/bin/bash
+
+DIALOG=${DIALOG=gdialog}
+
+clearVars() {
+ unset $@
+}
+
+gracefulExit() {
+ clearVars
+ exit 0
+}
+
+usage() {
+ green "Usage: " `cyan "message <QuotedText>"`
+}
+
+trap "gracefulExit" INT PWR QUIT TERM
+
+if [[ $# -gt 1 ]];
+then
+    red "Error: " `white "Too many arguments"`
+    usage
+    exit 0
+elif [[ $# -lt 1 ]] || [[ $1 == $str ]];
+then
+    red "Error: " `white "Missing argument"`
+    usage
+    exit 0
+else
+    $DIALOG --title "Attention" --msgbox "${1}" 14 11 --clear
+    gracefulExit
+fi
+
+
