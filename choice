@@ -25,13 +25,7 @@ usage() {
  gracefulExit
 }
 
-trap "safeExit" INT PWR QUIT TERM
-
-if [[ $# -gt 0 ]];
-then
-    red "Error: " `white "Too many arguments"`
-    usage   
-else
+start() {
     $DIALOG  --backtitle "Command Selection" \
     --title "Command Selection" \
     --clear \
@@ -47,6 +41,16 @@ else
     #  1) echo "no">ans.txt;;
     # esac
     gracefulExit
+}
+
+trap "safeExit" INT PWR QUIT TERM
+
+if [[ $# -gt 0 ]];
+then
+    red "Error: " `white "Too many arguments"`
+    usage   
+else
+    start
 fi
 
 
