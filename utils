@@ -1,0 +1,86 @@
+#!/bin/bash
+
+DIALOG=${DIALOG=gdialog}
+
+clearVars() {
+ unset $@ lines LINE
+}
+
+removeTemp() {
+    rm ans.txt
+}
+
+gracefulExit() {
+    clearVars
+    exit 0
+}
+
+safeExit() {
+    rm ans.txt
+    gracefulExit
+}
+
+usage() {
+ green "Usage: " `white "choice"`
+ gracefulExit
+}
+
+readFile() {
+    clear
+    white "Thanks for your input!"
+    for LINE in `cat ans.txt`
+    do 
+        lines="${lines}$LINE "
+    done
+    
+    if [[ ${lines} == "current time " ]];
+    then
+        printf "\n\tGet current time\n\n"
+
+    elif [[ ${lines} == "clean logs " ]];
+    then
+        printf "\n\tClean logs\n\n"
+
+    elif [[ ${lines} == "mount shared drive " ]];
+    then
+        printf "\n\tMount shared drive\n\n"
+
+    else
+        printf "\n\tView shared drives\n\n"
+    fi
+    removeFile
+}
+
+removeFile() {
+    rm ans.txt
+}
+
+start() {
+    $DIALOG  --backtitle "Utilities Selection" \
+    --title "Utilities Command Selection" \
+    --clear \
+    --radiolist "Select a utility to execute:" 40 70 2>ans.txt \
+        1 "current time" off \
+        2 "clean logs" off \
+        3 "mount shared drive" off \
+        4 "view shared drives" off
+
+    case $? in
+     0) readFile;;
+
+     1) removeFile;;
+    esac
+    gracefulExit
+}
+
+trap "safeExit" INT PWR QUIT TERM
+
+if [[ $# -gt 0 ]];
+then
+    red "Error: " `white "Too many arguments"`
+    usage   
+else
+    start
+fi
+
+
