@@ -23,9 +23,9 @@ examples() {
  printf "\t`purple "-------------------------------------------------------------"`\n"
  printf "\t`green "Example 4. "`\t`xcolor "nterm <'" 0 97``xcolor '"Command1;Command2;Command3"' 0 97``xcolor "'>" 0 97`\n"
  printf "\t`purple "-------------------------------------------------------------"`\n"
- printf "\t`green "Example 7. "`\t`xcolor 'nterm <"' 0 97``xcolor "'Command1';'Command2';'Command3'" 0 97``xcolor '">' 0 97`\n"
+ printf "\t`green "Example 5. "`\t`xcolor 'nterm <"' 0 97``xcolor "'Command1';'Command2';'Command3'" 0 97``xcolor '">' 0 97`\n"
  printf "\t`purple "-------------------------------------------------------------"`\n"
- printf "\t`green "Example 8. "`\t`xcolor "nterm <'" 0 97``xcolor '"Command1";"Command2";"Command3"' 0 97``xcolor "'>" 0 97`\n\n"
+ printf "\t`green "Example 6. "`\t`xcolor "nterm <'" 0 97``xcolor '"Command1";"Command2";"Command3"' 0 97``xcolor "'>" 0 97`\n\n"
 }
 
 trap 'gracefulExit' INT TERM PWR QUIT STOP KILL
@@ -46,7 +46,8 @@ else
     then
         examples
     else
-        gnome-terminal -x bash -c "${1};bash"
+        gnome-terminal -x "bash" -c "${1};bash"
+        #gnome-terminal -- sh -- "${1};exec bash"
         gracefulExit
     fi
 fi

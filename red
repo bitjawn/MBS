@@ -1,6 +1,11 @@
  #!/bin/bash
 
+ clear_vars() {
+     unset result 
+ }
+
 graceful_exit() {
+ clear_vars
  exit 0
 }
 
@@ -21,6 +26,5 @@ else
         result="${result}${p} "
     done
         echo -e "\e[1;31m${result}\e[0m\n"
+        graceful_exit
 fi
-
-

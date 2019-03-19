@@ -1,0 +1,48 @@
+#!/bin/bash
+
+clearVars() {
+ unset ARG result
+}
+
+gracefulExit() {
+ clearVars
+ exit 0;
+}
+
+missingArgumentError() {
+ red "\n\tError: " `white " Missing Argument\n"`
+ usage
+ exit 121
+}
+
+usage() {
+    green "\tUsage: " `white "command <argument>"`
+    gracefulExit
+}
+
+trap "gracefulExit" INT TERM QUIT PWR
+
+if [[ $# -gt 1 ]];
+then
+   for ARG in $@
+   do
+     result="${result}${ARG} "
+   done
+   echo -e "\t\e[37;1m${result}\e[0m\n"
+else
+   case $# in
+    0)
+     missingArgumentError
+     ;;
+
+   1)
+    if [[ $1 == "usage" ]];
+    then
+        usage
+    else
+        magenta $1
+        gracefulExit
+    fi
+    ;;
+   esac
+fi
