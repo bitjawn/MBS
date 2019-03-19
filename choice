@@ -21,7 +21,7 @@ safeExit() {
 }
 
 usage() {
- green "Usage: " `cyan "choice"`
+ green "Usage: " `white "choice"`
  gracefulExit
 }
 
