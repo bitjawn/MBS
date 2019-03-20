@@ -25,7 +25,7 @@ fi
 
 cd $LOG_DIR
 
-if [ `pwd` != "$LOG_DIR" ] # or if [ "$PWD" != "$LOG_DIR" ]
+if [ "$PWD" != "$LOG_DIR" ] # or if [ "$PWD" != "$LOG_DIR" ]
 then
     echo -e "\033[1;91mCan't change to $LOG_DIR.\033[0m"
     exit $E_XCD

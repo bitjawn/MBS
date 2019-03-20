@@ -35,18 +35,43 @@ readFile() {
     
     if [[ ${lines} == "current time " ]];
     then
-        printf "\n\tGet current time\n\n"
+        printf "\n\tGetting the current time\n\n"
+        nterminal "clock"
 
     elif [[ ${lines} == "clean logs " ]];
     then
-        printf "\n\tClean logs\n\n"
+        printf "\n\tCleaning logs\n\n"
+        exec 3>&1
+        result=$($DIALOG --title "Rotate log files" --checklist "Choose which logs to rotate" 100 40 3 \
+            1 "messages" off \
+            2 "boot" off \
+            3 "syslog" off \
+            4 "deez nuts" 2>&1 1>&3)
+        
+        if [[ $result =~ [\|] ]]
+        then
+            _result="${result//|/ }"
+            # echo ${_result[0]}
+
+            for L in $_result
+            do
+                newArray+=($L)
+            done
+
+            printf "\n\n\t\tArray Length: ${#newArray[@]}\n\n\n\n"
+
+            # printf "\n\t$_result\n\n\n\n"
+        fi
+        # nterminal "sudo ~/bin/cleaner"
+        return
 
     elif [[ ${lines} == "mount shared drive " ]];
     then
-        printf "\n\tMount shared drive\n\n"
-
+        printf "\n\tMounting shared drive\n\n"
+        nterminal "sudo mountshare"
     else
-        printf "\n\tView shared drives\n\n"
+        printf "\n\tViewing shared drives\n\n"
+        nterminal "sudo viewshares"
     fi
     removeFile
 }
@@ -59,7 +84,7 @@ start() {
     $DIALOG  --backtitle "Utilities Selection" \
     --title "Utilities Command Selection" \
     --clear \
-    --radiolist "Select a utility to execute:" 40 70 2>ans.txt \
+    --radiolist "Select a utility to execute:" 90 90 2>ans.txt \
         1 "current time" off \
         2 "clean logs" off \
         3 "mount shared drive" off \
