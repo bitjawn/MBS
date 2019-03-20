@@ -92,10 +92,11 @@ readFile() {
     elif [[ ${lines} == "mount shared drive " ]];
     then
         printf "\n\tMounting shared drive\n\n"
-        nterminal "sudo mountshare"
-    else
+        nterminal 'white "Mounting shared drive"'
+    elif [[ ${lines} == "view shared drives " ]];
+    then
         printf "\n\tViewing shared drives\n\n"
-        nterminal "sudo viewshares"
+        nterminal 'white "Viewing shared drives"'
     fi
     removeFile
 }
