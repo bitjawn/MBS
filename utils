@@ -35,7 +35,7 @@ readFile() {
     
     if [[ ${lines} == "current time " ]];
     then
-        printf "\n\tGetting the current time\n\n"
+        white "Getting the current time"
         nterminal "clock"
 
     elif [[ ${lines} == "clean logs " ]];
@@ -91,11 +91,11 @@ readFile() {
 
     elif [[ ${lines} == "mount shared drive " ]];
     then
-        printf "\n\tMounting shared drive\n\n"
+        white "Mounting shared drive"
         nterminal 'white "Mounting shared drive"'
     elif [[ ${lines} == "view shared drives " ]];
     then
-        printf "\n\tViewing shared drives\n\n"
+        white "Viewing shared drives"
         nterminal 'white "Viewing shared drives"'
     fi
     removeFile
