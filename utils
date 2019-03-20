@@ -40,7 +40,7 @@ readFile() {
 
     elif [[ ${lines} == "clean logs " ]];
     then
-        printf "\n\tCleaning logs\n\n"
+        white "Cleaning logs"
         exec 3>&1
         result=$($DIALOG --title "Rotate log files" --checklist "Choose which logs to rotate" 100 40 3 \
             1 "messages" off \
@@ -48,19 +48,43 @@ readFile() {
             3 "syslog" off \
             4 "deez nuts" 2>&1 1>&3)
         
-        if [[ $result =~ [\|] ]]
+        if [[ $result =~ [\|] ]];
         then
             _result="${result//|/ }"
-            # echo ${_result[0]}
-
             for L in $_result
             do
-                newArray+=($L)
+                if [[ $L -eq 1 ]];
+                then
+                    newArray+=("messages")
+                elif [[ $L -eq 2 ]];
+                then
+                    newArray+=("boot");
+                elif [[ $L -eq 3 ]];
+                then
+                    newArray+=("syslog")
+                elif [[ $L -eq 4 ]];
+                then
+                    newArray+=("deez_nuts")
+                fi
             done
+            for element in ${newArray[@]};do
+                white "Rotating ${element}"
+            done;
+        elif [[ ! $result =~ [\|] ]];
+        then
+            case $result in
+                1)
+                    white "Rotating messages";;
 
-            printf "\n\n\t\tArray Length: ${#newArray[@]}\n\n\n\n"
+                2)
+                    white "Rotating boot";;
 
-            # printf "\n\t$_result\n\n\n\n"
+                3)
+                    white "Rotating syslog";;
+
+                4)
+                    white "Rotating deez nuts";;
+            esac
         fi
         # nterminal "sudo ~/bin/cleaner"
         return
