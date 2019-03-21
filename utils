@@ -87,8 +87,6 @@ readFile() {
                     white "Rotating deez nuts";;
             esac
         fi
-        # nterminal "sudo ~/bin/cleaner"
-        return
 
     elif [[ ${lines} == "mount shared drive " ]];
     then
@@ -107,11 +105,11 @@ removeFile() {
 }
 
 start() {
-    $DIALOG  --backtitle "Utilities Selection" \
-    --title "Utilities Command Selection" \
-    --aspect 444 422 \
+    $DIALOG  --backtitle "Utility Selection" \
+    --title "Utility Selection" \
+    --aspect 48 56 \
     --clear \
-    --radiolist "Select a utility to execute:" 200 200 2>ans.txt \
+    --radiolist "Select a task to perform:" 200 200 2>ans.txt \
         1 "current time" off \
         2 "clean logs" off \
         3 "mount shared drive" off \
